@@ -12,7 +12,7 @@ public class OfferDetails extends AppCompatActivity {
         setContentView(R.layout.activity_offer_details);
 
         String savedExtra = getIntent().getStringExtra("animal");
-        TextView myText = (TextView) findViewById(R.id.textView);
+        TextView myText = (TextView) findViewById(R.id.tvOfferName);
         myText.setText(savedExtra);
     }
 }
