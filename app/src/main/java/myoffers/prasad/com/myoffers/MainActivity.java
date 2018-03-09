@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,7 +28,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.BindView;
 
-public class MainActivity extends AppCompatActivity implements OffersCardAdapter.OffersAdapterListener {
+public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     String[] nameArray = {"Dog", "Gorilla", "Alligator", "Butterfly", "Dragon", "German Shepherd",
             "Dog", "Gorilla", "Alligator", "Butterfly", "Dragon", "German Shepherd"};
@@ -77,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements OffersCardAdapter
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    @BindView(R.id.shimmer_view_container)
+    ShimmerFrameLayout mShimmerViewContainer;
     OffersCardAdapter adapter;
     List<MyOffer> offersList;
 
@@ -113,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements OffersCardAdapter
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Toast.makeText(getApplicationContext(), "You selected "+position+1+" offer..",Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(), "You selected " + position + 1 + " offer..", Toast.LENGTH_SHORT);
             }
 
             @Override
@@ -128,6 +131,18 @@ public class MainActivity extends AppCompatActivity implements OffersCardAdapter
         } catch (Exception e) {
             e.printStackTrace();
         }*/
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mShimmerViewContainer.startShimmerAnimation();
+    }
+
+    @Override
+    public void onPause() {
+        mShimmerViewContainer.stopShimmerAnimation();
+        super.onPause();
     }
 
     @Override
@@ -215,22 +230,16 @@ public class MainActivity extends AppCompatActivity implements OffersCardAdapter
         a = new MyOffer("Merchant10", "Offer 10", "This is Offer 1", "Category 1", new Date(), new Date(), covers[9]);
         offersList.add(a);
 
-        adapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onAddToFavoriteSelected(int position) {
-
-    }
-
-    @Override
-    public void onNotInterestedSelected(int position) {
-
-    }
-
-    @Override
-    public void onCardSelected(int position, ImageView thumbnail) {
-        Toast.makeText(this, "You selected "+position+1+" offer",Toast.LENGTH_SHORT);
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        Log.i(TAG, "Simulating JSON Load");
+                        adapter.notifyDataSetChanged();
+                        // stop animating Shimmer and hide the layout
+                        mShimmerViewContainer.stopShimmerAnimation();
+                        mShimmerViewContainer.setVisibility(View.GONE);
+                    }
+                }, 10000);
     }
 
     /**
