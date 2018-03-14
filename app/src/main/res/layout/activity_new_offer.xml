@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:fitsSystemWindows="true">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view_new_offer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="myoffers.prasad.com.myoffers.NewOfferActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +22,7 @@
             android:layout_marginBottom="24dp"
             android:src="@drawable/logo" />
 
-        <!--  Mobile Number Label -->
+        <!--Offer caption label-->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,44 +30,14 @@
             android:layout_marginTop="8dp">
 
             <EditText
-                android:id="@+id/input_mobile_number"
+                android:id="@+id/input_offer_caption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Mobile Number"
-                android:inputType="phone" />
-        </android.support.design.widget.TextInputLayout>
-
-        <!-- Password Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp">
-
-            <EditText
-                android:id="@+id/input_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Password"
-                android:inputType="textPassword" />
-        </android.support.design.widget.TextInputLayout>
-
-        <!-- Store Name Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp">
-
-            <EditText
-                android:id="@+id/input_store_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Store Name"
+                android:hint="Caption"
                 android:inputType="textCapWords" />
         </android.support.design.widget.TextInputLayout>
 
-        <!-- Email Label -->
+        <!--Validity label-->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,14 +45,16 @@
             android:layout_marginTop="8dp">
 
             <EditText
-                android:id="@+id/input_email"
+                android:id="@+id/input_offer_validity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email"
-                android:inputType="textEmailAddress" />
+                android:hint="Valid Till"
+                android:inputType="date"
+                android:onClick="showDatePickerDialog"
+                />
         </android.support.design.widget.TextInputLayout>
 
-        <!--  Store Address Label -->
+        <!--Category label-->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -87,36 +62,36 @@
             android:layout_marginTop="8dp">
 
             <EditText
-                android:id="@+id/input_store_address"
+                android:id="@+id/input_offer_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Store Address"
-                android:inputType="textPostalAddress" />
+                android:hint="Category"
+                android:inputType="textCapWords" />
         </android.support.design.widget.TextInputLayout>
 
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/map"
+        <!--Offer Description label-->
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
-        <!-- Signup Button -->
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp">
+
+            <EditText
+                android:id="@+id/input_offer_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textMultiLine"
+                android:hint="Description"/>
+        </android.support.design.widget.TextInputLayout>
+
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_signup"
+            android:id="@+id/btn_create_offer"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:layout_marginTop="24dp"
             android:padding="12dp"
-            android:text="Create Account" />
-
-        <TextView
-            android:id="@+id/link_login"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:gravity="center"
-            android:text="Already a member? Login"
-            android:textSize="16dip" />
-
+            android:text="Create Offer" />
     </LinearLayout>
 </ScrollView>

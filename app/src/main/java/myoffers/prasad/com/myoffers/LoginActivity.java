@@ -1,5 +1,6 @@
 package myoffers.prasad.com.myoffers;
 
+import android.Manifest;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.app.ProgressDialog;
@@ -13,6 +14,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.androidnetworking.AndroidNetworking;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener;
+import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import butterknife.ButterKnife;
 import butterknife.BindView;
@@ -35,7 +42,25 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        AndroidNetworking.initialize(getApplicationContext());
 
+        //Ask for permissions
+        MultiplePermissionsListener dialogInternetPermissionListener =
+                DialogOnAnyDeniedMultiplePermissionsListener.Builder
+                        .withContext(getApplicationContext())
+                        .withTitle("Internet permission")
+                        .withMessage("Internet permission is needed for this app to work properly")
+                        .withButtonText(android.R.string.ok)
+                        .withIcon(R.drawable.ic_mobile_data)
+                        .build();
+
+        MultiplePermissionsListener compositePermissionListener = new CompositeMultiplePermissionsListener(dialogInternetPermissionListener);
+
+        Dexter.withActivity(this)
+                .withPermissions(Manifest.permission.INTERNET)
+                .withListener(compositePermissionListener)
+                .onSameThread()
+                .check();
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -84,7 +109,7 @@ public class LoginActivity extends AppCompatActivity {
                         // onLoginFailed();
                         progressDialog.dismiss();
                     }
-                }, 3000);
+                }, 1000);
     }
 
 

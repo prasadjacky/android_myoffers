@@ -7,6 +7,7 @@ package myoffers.prasad.com.myoffers;
 import android.content.Context;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,14 +21,11 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-/**
- * Created by Ravi Tamada on 18/05/16.
- */
 public class OffersCardAdapter extends RecyclerView.Adapter<OffersCardAdapter.MyViewHolder> {
 
+    private final String TAG = "OfferCardAdapter";
     private Context mContext;
     private List<MyOffer> offersList;
-    private OffersAdapterListener listener;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, count;
@@ -58,9 +56,9 @@ public class OffersCardAdapter extends RecyclerView.Adapter<OffersCardAdapter.My
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder,final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         MyOffer offer = offersList.get(position);
-        holder.title.setText(offer.getTagLine());
+        holder.title.setText(offer.getCaption());
         holder.count.setText(offer.getMerchantID());
 
         // loading album cover using Glide library
@@ -72,11 +70,11 @@ public class OffersCardAdapter extends RecyclerView.Adapter<OffersCardAdapter.My
                 showPopupMenu(holder.overflow);
             }
         });
-/*
-        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
+        /*holder.thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listener.onCardSelected(position, holder.thumbnail);
+                Log.i(TAG, "Clicked "+position);
             }
         });*/
     }
@@ -119,10 +117,5 @@ public class OffersCardAdapter extends RecyclerView.Adapter<OffersCardAdapter.My
     @Override
     public int getItemCount() {
         return offersList.size();
-    }
-    public interface OffersAdapterListener {
-        void onAddToFavoriteSelected(int position);
-        void onNotInterestedSelected(int position);
-        void onCardSelected(int position, ImageView thumbnail);
     }
 }

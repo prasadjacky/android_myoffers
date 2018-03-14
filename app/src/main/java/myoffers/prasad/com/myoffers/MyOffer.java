@@ -1,23 +1,24 @@
 package myoffers.prasad.com.myoffers;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by prasad on 9/3/18.
  */
 
-public class MyOffer {
+public class MyOffer implements Serializable{
     private String merchantID;
-    private String tagLine;
+    private String caption;
     private String offerDesc;
     private String category;
     private Date validFrom;
     private Date validTo;
     private int thumbnail;
 
-    public MyOffer(String merchantID, String tagLine, String offerDesc, String category, Date validFrom, Date validTo, int thumbnail) {
+    public MyOffer(String merchantID, String caption, String offerDesc, String category, Date validFrom, Date validTo, int thumbnail) {
         this.merchantID = merchantID;
-        this.tagLine = tagLine;
+        this.caption = caption;
         this.offerDesc = offerDesc;
         this.category = category;
         this.validFrom = validFrom;
@@ -33,12 +34,12 @@ public class MyOffer {
         this.merchantID = merchantID;
     }
 
-    public String getTagLine() {
-        return tagLine;
+    public String getCaption() {
+        return caption;
     }
 
-    public void setTagLine(String tagLine) {
-        this.tagLine = tagLine;
+    public void setCaption(String caption) {
+        this.caption = caption;
     }
 
     public String getOfferDesc() {

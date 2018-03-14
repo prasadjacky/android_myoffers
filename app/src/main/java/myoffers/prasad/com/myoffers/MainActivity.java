@@ -1,10 +1,15 @@
 package myoffers.prasad.com.myoffers;
 
+import android.Manifest;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -13,13 +18,14 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.facebook.shimmer.ShimmerFrameLayout;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,49 +36,9 @@ import butterknife.BindView;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    String[] nameArray = {"Dog", "Gorilla", "Alligator", "Butterfly", "Dragon", "German Shepherd",
-            "Dog", "Gorilla", "Alligator", "Butterfly", "Dragon", "German Shepherd"};
+    private static int REQUEST_NEW_OFFER = 0;
 
-    String[] infoArray = {
-            "Our loyal friend",
-            "Debut in King Kong",
-            "Beware of Jaws",
-            "Fly away you!",
-            "Breathes fire",
-            "Another loyal friend",
-            "Our loyal friend",
-            "Debut in King Kong",
-            "Beware of Jaws",
-            "Fly away you!",
-            "Breathes fire",
-            "Another loyal friend"
-    };
-
-    /*Integer[] imageArray = {R.drawable.dog,
-            R.drawable.gorilla,
-            R.drawable.alligator,
-            R.drawable.butterfly,
-            R.drawable.dragon,
-            R.drawable.germanshepherd,
-            R.drawable.dog,
-            R.drawable.gorilla,
-            R.drawable.alligator,
-            R.drawable.butterfly,
-            R.drawable.dragon,
-            R.drawable.germanshepherd};*/
-    Integer[] imageArray = {R.drawable.dog_outline,
-            R.drawable.gorilla_outline,
-            R.drawable.alligator_outline,
-            R.drawable.butterfly_outline,
-            R.drawable.dragon_outline,
-            R.drawable.german_shepherd_outline,
-            R.drawable.dog_outline,
-            R.drawable.gorilla_outline,
-            R.drawable.alligator_outline,
-            R.drawable.butterfly_outline,
-            R.drawable.dragon_outline,
-            R.drawable.german_shepherd_outline};
-
+    //View binding
    /* @BindView(R.id.lvOffers)
     ListView listView;*/
 
@@ -80,31 +46,24 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     @BindView(R.id.shimmer_view_container)
     ShimmerFrameLayout mShimmerViewContainer;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+    @BindView(R.id.main_content)
+    CoordinatorLayout main_content;
+
+    //Variables
     OffersCardAdapter adapter;
     List<MyOffer> offersList;
+    boolean doubleBackToExitPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_card);
         ButterKnife.bind(this);
+
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
-        /*OffersListAdapter whatever = new OffersListAdapter(this, nameArray, infoArray, imageArray);
-
-        listView.setAdapter(whatever);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,
-                                    long id) {
-                Intent intent = new Intent(MainActivity.this, OfferDetails.class);
-                String message = nameArray[position];
-                intent.putExtra("animal", message);
-                startActivity(intent);
-            }
-        });*/
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-
         offersList = new ArrayList<>();
         adapter = new OffersCardAdapter(this, offersList);
 
@@ -113,15 +72,19 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+
             @Override
             public void onClick(View view, int position) {
-                Toast.makeText(getApplicationContext(), "You selected " + position + 1 + " offer..", Toast.LENGTH_SHORT);
+                MyOffer myOffer = offersList.get(position);
+                Intent intent = new Intent(MainActivity.this, OfferDetails.class);
+                intent.putExtra("myOffer", myOffer);
+                startActivity(intent);
             }
 
             @Override
             public void onLongClick(View view, int position) {
-
+                testRestCall();
             }
         }));
         prepareAlbums();
@@ -131,6 +94,32 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }*/
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, NewOfferActivity.class);
+                startActivityForResult(intent, REQUEST_NEW_OFFER);
+            }
+        });
+    }
+
+    private void testRestCall() {
+        AndroidNetworking.get("https://devops.ltimosaic.com/DevOpsPortalService/api/presentation/projects")
+                .setTag("test")
+                .setPriority(Priority.LOW)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        // do anything with response
+                        Log.i(TAG, "JSON Response" + response.length());
+                    }
+
+                    @Override
+                    public void onError(ANError error) {
+                        // handle error
+                    }
+                });
     }
 
     @Override
@@ -148,7 +137,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i(TAG, "Login Success");
+        if (requestCode == REQUEST_NEW_OFFER) {
+            if (resultCode == RESULT_OK) {
+                MyOffer newOffer = (MyOffer) data.getSerializableExtra("myOffer");
+                offersList.add(newOffer);
+                adapter.notifyDataSetChanged();
+            }
+        }
     }
 
     /**
@@ -187,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
      * Adding few albums for testing
      */
     private void prepareAlbums() {
-        int[] covers = new int[]{R.drawable.dog_outline,
+        final int[] covers = new int[]{R.drawable.dog_outline,
                 R.drawable.gorilla_outline,
                 R.drawable.alligator_outline,
                 R.drawable.butterfly_outline,
@@ -200,46 +195,45 @@ public class MainActivity extends AppCompatActivity {
                 R.drawable.dragon_outline,
                 R.drawable.german_shepherd_outline};
 
-        MyOffer a = new MyOffer("Merchant1", "Offer 1", "This is Offer 1", "Category 1", new Date(), new Date(), covers[0]);
-        offersList.add(a);
-
-        a = new MyOffer("Merchant2", "Offer 2", "This is Offer 1", "Category 1", new Date(), new Date(), covers[1]);
-        offersList.add(a);
-
-        a = new MyOffer("Merchant3", "Offer 3", "This is Offer 1", "Category 1", new Date(), new Date(), covers[2]);
-        offersList.add(a);
-
-        a = new MyOffer("Merchant4", "Offer 4", "This is Offer 1", "Category 1", new Date(), new Date(), covers[3]);
-        offersList.add(a);
-
-        a = new MyOffer("Merchant5", "Offer 5", "This is Offer 1", "Category 1", new Date(), new Date(), covers[4]);
-        offersList.add(a);
-
-        a = new MyOffer("Merchant6", "Offer 6", "This is Offer 1", "Category 1", new Date(), new Date(), covers[5]);
-        offersList.add(a);
-
-        a = new MyOffer("Merchant7", "Offer 7", "This is Offer 1", "Category 1", new Date(), new Date(), covers[6]);
-        offersList.add(a);
-
-        a = new MyOffer("Merchant8", "Offer 8", "This is Offer 1", "Category 1", new Date(), new Date(), covers[7]);
-        offersList.add(a);
-
-        a = new MyOffer("Merchant9", "Offer 9", "This is Offer 1", "Category 1", new Date(), new Date(), covers[8]);
-        offersList.add(a);
-
-        a = new MyOffer("Merchant10", "Offer 10", "This is Offer 1", "Category 1", new Date(), new Date(), covers[9]);
-        offersList.add(a);
-
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         Log.i(TAG, "Simulating JSON Load");
+                        MyOffer a = new MyOffer("Merchant1", "Offer 1", "This is Offer 1", "Category 1", new Date(), new Date(), covers[0]);
+                        offersList.add(a);
+
+                        a = new MyOffer("Merchant2", "Offer 2", "This is Offer 1", "Category 1", new Date(), new Date(), covers[1]);
+                        offersList.add(a);
+
+                        a = new MyOffer("Merchant3", "Offer 3", "This is Offer 1", "Category 1", new Date(), new Date(), covers[2]);
+                        offersList.add(a);
+
+                        a = new MyOffer("Merchant4", "Offer 4", "This is Offer 1", "Category 1", new Date(), new Date(), covers[3]);
+                        offersList.add(a);
+
+                        a = new MyOffer("Merchant5", "Offer 5", "This is Offer 1", "Category 1", new Date(), new Date(), covers[4]);
+                        offersList.add(a);
+
+                        a = new MyOffer("Merchant6", "Offer 6", "This is Offer 1", "Category 1", new Date(), new Date(), covers[5]);
+                        offersList.add(a);
+
+                        a = new MyOffer("Merchant7", "Offer 7", "This is Offer 1", "Category 1", new Date(), new Date(), covers[6]);
+                        offersList.add(a);
+
+                        a = new MyOffer("Merchant8", "Offer 8", "This is Offer 1", "Category 1", new Date(), new Date(), covers[7]);
+                        offersList.add(a);
+
+                        a = new MyOffer("Merchant9", "Offer 9", "This is Offer 1", "Category 1", new Date(), new Date(), covers[8]);
+                        offersList.add(a);
+
+                        a = new MyOffer("Merchant10", "Offer 10", "This is Offer 1", "Category 1", new Date(), new Date(), covers[9]);
+                        offersList.add(a);
                         adapter.notifyDataSetChanged();
                         // stop animating Shimmer and hide the layout
                         mShimmerViewContainer.stopShimmerAnimation();
                         mShimmerViewContainer.setVisibility(View.GONE);
                     }
-                }, 10000);
+                }, 1000);
     }
 
     /**
@@ -286,5 +280,23 @@ public class MainActivity extends AppCompatActivity {
     private int dpToPx(int dp) {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Snackbar.make(main_content, "Press BACK again to exit", Snackbar.LENGTH_SHORT).show();
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
     }
 }
