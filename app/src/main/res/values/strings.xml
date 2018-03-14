@@ -6,4 +6,5 @@
     <string name="backdrop_title">Trending Offers</string>
     <string name="backdrop_subtitle">This season top 20 offers</string>
     <string name="action_not_interested">Not Interested</string>
+    <string name="google_android_map_api_key">AIzaSyByJpSI9Xg6Wq1GdSvfy7xmBc0V8ZwZT2w</string>
 </resources>

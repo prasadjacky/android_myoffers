@@ -1,5 +1,7 @@
 package myoffers.prasad.com.myoffers;
 
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -13,13 +15,23 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import butterknife.ButterKnife;
 import butterknife.BindView;
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
 
-    @BindView(R.id.input_name)
+    @BindView(R.id.input_mobile_number)
     EditText _nameText;
     @BindView(R.id.input_email)
     EditText _emailText;
@@ -29,7 +41,9 @@ public class SignupActivity extends AppCompatActivity {
     Button _signupButton;
     @BindView(R.id.link_login)
     TextView _loginLink;
-
+    @BindView(R.id.map)
+    MapView mapView;
+    GoogleMap googleMap;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +64,29 @@ public class SignupActivity extends AppCompatActivity {
                 finish();
             }
         });
+        //mapView = (MapView) view.findViewById(R.id.map);
+        mapView.onCreate(savedInstanceState);
+        /*if (mapView != null) {
+            googleMap = mapView.getMap();
+            googleMap.addMarker(new MarkerOptions()
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_flag))
+                    .anchor(0.0f, 1.0f)
+                    .position(new LatLng(55.854049, 13.661331)));
+            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+            if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return view;
+            }
+            googleMap.setMyLocationEnabled(true);
+            googleMap.getUiSettings().setZoomControlsEnabled(true);
+            MapsInitializer.initialize(this.getActivity());
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            builder.include(new LatLng(55.854049, 13.661331));
+            LatLngBounds bounds = builder.build();
+            int padding = 0;
+            // Updates the location and zoom of the MapView
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+            googleMap.moveCamera(cameraUpdate);
+        }*/
     }
 
     public void signup() {
