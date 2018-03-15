@@ -1,6 +1,8 @@
 package myoffers.prasad.com.myoffers;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +17,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,8 +37,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import butterknife.ButterKnife;
 import butterknife.BindView;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
     private static final String TAG = "SignupActivity";
+    int PLACE_PICKER_REQUEST = 1;
+    private GoogleApiClient mGoogleApiClient;
 
     @BindView(R.id.input_mobile_number)
     EditText _nameText;
@@ -37,18 +48,27 @@ public class SignupActivity extends AppCompatActivity {
     EditText _emailText;
     @BindView(R.id.input_password)
     EditText _passwordText;
+    @BindView(R.id.input_store_address)
+    EditText _storeAddress;
+    @BindView(R.id.input_store_location)
+    EditText _storeLocation;
     @BindView(R.id.btn_signup)
     Button _signupButton;
     @BindView(R.id.link_login)
     TextView _loginLink;
-    @BindView(R.id.map)
-    MapView mapView;
-    GoogleMap googleMap;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
+
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(this, this)
+                .build();
 
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,29 +84,18 @@ public class SignupActivity extends AppCompatActivity {
                 finish();
             }
         });
-        //mapView = (MapView) view.findViewById(R.id.map);
-        mapView.onCreate(savedInstanceState);
-        /*if (mapView != null) {
-            googleMap = mapView.getMap();
-            googleMap.addMarker(new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_flag))
-                    .anchor(0.0f, 1.0f)
-                    .position(new LatLng(55.854049, 13.661331)));
-            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-            if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return view;
-            }
-            googleMap.setMyLocationEnabled(true);
-            googleMap.getUiSettings().setZoomControlsEnabled(true);
-            MapsInitializer.initialize(this.getActivity());
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            builder.include(new LatLng(55.854049, 13.661331));
-            LatLngBounds bounds = builder.build();
-            int padding = 0;
-            // Updates the location and zoom of the MapView
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-            googleMap.moveCamera(cameraUpdate);
-        }*/
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
     }
 
     public void signup() {
@@ -165,5 +174,31 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         return valid;
+    }
+
+    public void showPlacePicker(View v) {
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        //builder.setLatLngBounds(new LatLngBounds());
+        try {
+            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, this);
+                String placeLatLng = place.getLatLng().toString();
+                //Toast.makeText(this, placeLatLng, Toast.LENGTH_LONG).show();
+                _storeLocation.setText(placeLatLng);
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Toast.makeText(this, connectionResult.getErrorMessage() + "", Toast.LENGTH_LONG).show();
     }
 }

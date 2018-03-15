@@ -94,6 +94,22 @@
                 android:inputType="textPostalAddress" />
         </android.support.design.widget.TextInputLayout>
 
+        <!--  Store Address Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp">
+
+            <EditText
+                android:id="@+id/input_store_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Store Location"
+                android:inputType="textPostalAddress"
+                android:onClick="showPlacePicker" />
+        </android.support.design.widget.TextInputLayout>
+
         <com.google.android.gms.maps.MapView
             android:id="@+id/map"
             android:layout_width="match_parent"

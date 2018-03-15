@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="myoffers.prasad.com.myoffers">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/myoffers_logo"
@@ -8,9 +14,6 @@
         android:roundIcon="@drawable/myoffers_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_android_map_api_key" />
 
         <activity
             android:name=".MainActivity"
@@ -33,6 +36,9 @@
         <activity
             android:name=".NewOfferActivity"
             android:theme="@style/AppTheme.Dark" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyByJpSI9Xg6Wq1GdSvfy7xmBc0V8ZwZT2w"/>
     </application>
 
 </manifest>
