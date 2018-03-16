@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -22,27 +23,59 @@
                 android:layout_height="@dimen/album_cover_height"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:scaleType="fitXY" />
+                android:scaleType="fitXY"
+                android:visibility="visible" />
 
             <TextView
-                android:id="@+id/title"
+                android:id="@+id/offerName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/thumbnail"
+                android:layout_toStartOf="@+id/overflow"
                 android:paddingLeft="@dimen/album_title_padding"
                 android:paddingRight="@dimen/album_title_padding"
                 android:paddingTop="@dimen/album_title_padding"
-                android:textColor="@color/accent"
-                android:textSize="@dimen/album_title" />
+                android:textColor="@color/primary_darker"
+                android:textSize="@dimen/album_title"
+                tools:text="Offer Name" />
 
             <TextView
-                android:id="@+id/count"
+                android:id="@+id/merchantID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/title"
+                android:layout_below="@id/offerName"
+                android:layout_toStartOf="@+id/overflow"
                 android:paddingBottom="@dimen/songs_count_padding_bottom"
                 android:paddingLeft="@dimen/album_title_padding"
                 android:paddingRight="@dimen/album_title_padding"
+                android:text="Merchant ID"
+                android:textColor="@color/primary_darker"
+                android:textSize="@dimen/songs_count" />
+
+            <TextView
+                android:id="@+id/offerCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/merchantID"
+                android:layout_toStartOf="@+id/overflow"
+                android:paddingBottom="@dimen/songs_count_padding_bottom"
+                android:paddingLeft="@dimen/album_title_padding"
+                android:paddingRight="@dimen/album_title_padding"
+                android:text="Category"
+                android:textColor="@color/primary_darker"
+                android:textSize="@dimen/songs_count" />
+
+            <TextView
+                android:id="@+id/offerValidity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/offerCategory"
+                android:layout_toStartOf="@+id/overflow"
+                android:paddingBottom="@dimen/songs_count_padding_bottom"
+                android:paddingLeft="@dimen/album_title_padding"
+                android:paddingRight="@dimen/album_title_padding"
+                android:text="Valid Till"
+                android:textColor="@color/primary_darker"
                 android:textSize="@dimen/songs_count" />
 
             <ImageView
@@ -53,7 +86,7 @@
                 android:layout_below="@id/thumbnail"
                 android:layout_marginTop="@dimen/ic_album_overflow_margin_top"
                 android:scaleType="centerCrop"
-                card_view:srcCompat="@drawable/menu_vertical_white" />
+                card_view:srcCompat="@drawable/menu_vertical" />
 
         </RelativeLayout>
 

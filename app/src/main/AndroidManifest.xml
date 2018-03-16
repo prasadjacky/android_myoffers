@@ -16,8 +16,9 @@
         android:theme="@style/AppTheme">
 
         <activity
+            android:label="Trending Offers"
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.Dark">
+            android:theme="@style/AppTheme.DarkActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,7 +39,10 @@
             android:theme="@style/AppTheme.Dark" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyByJpSI9Xg6Wq1GdSvfy7xmBc0V8ZwZT2w"/>
+            android:value="@string/google_android_map_api_key"/>
+        <meta-data
+            android:name="android.app.searchable"
+            android:resource="@xml/searchable" />
     </application>
 
 </manifest>

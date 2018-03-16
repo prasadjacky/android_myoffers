@@ -1,9 +1,13 @@
 package myoffers.prasad.com.myoffers;
 
 import android.Manifest;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -15,8 +19,11 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.androidnetworking.AndroidNetworking;
@@ -54,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     //Variables
     OffersCardAdapter adapter;
     List<MyOffer> offersList;
+    private SearchView searchView;
     boolean doubleBackToExitPressedOnce = false;
 
     @Override
@@ -65,29 +73,46 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         offersList = new ArrayList<>();
-        adapter = new OffersCardAdapter(this, offersList);
-
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
-
+        adapter = new OffersCardAdapter(this, offersList, new OffersCardAdapter.ClickListener() {
             @Override
-            public void onClick(View view, int position) {
-                MyOffer myOffer = offersList.get(position);
+            public void onPositionClicked(int position) {
+              MyOffer myOffer = offersList.get(position);
                 Intent intent = new Intent(MainActivity.this, OfferDetails.class);
                 intent.putExtra("myOffer", myOffer);
                 startActivity(intent);
             }
 
             @Override
+            public void onLongClicked(int position) {
+
+            }
+        });
+
+        // white background notification bar
+        whiteNotificationBar(recyclerView);
+
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+        /*recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new RecyclerTouchListener.ClickListener() {
+
+            @Override
+            public void onClick(View view, int position) {
+                Log.i(TAG, view.getId() +"");
+                *//*MyOffer myOffer = offersList.get(position);
+                Intent intent = new Intent(MainActivity.this, OfferDetails.class);
+                intent.putExtra("myOffer", myOffer);
+                startActivity(intent);*//*
+            }
+
+            @Override
             public void onLongClick(View view, int position) {
                 testRestCall();
             }
-        }));
-        prepareAlbums();
+        }));*/
+        prepareOffers();
 
 /*        try {
             Glide.with(this).load(R.drawable.red_vector_bg).into((ImageView) findViewById(R.id.backdrop));
@@ -181,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Adding few albums for testing
      */
-    private void prepareAlbums() {
+    private void prepareOffers() {
         final int[] covers = new int[]{R.drawable.dog_outline,
                 R.drawable.gorilla_outline,
                 R.drawable.alligator_outline,
@@ -283,7 +308,70 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.action_search)
+                .getActionView();
+        searchView.setSearchableInfo(searchManager
+                .getSearchableInfo(getComponentName()));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        // listening to search query text change
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // filter recycler view when query submitted
+                Log.i(TAG, query);
+                adapter.getFilter().filter(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                // filter recycler view when text is changed
+                Log.i(TAG, query);
+                adapter.getFilter().filter(query);
+                return false;
+            }
+        });
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_search) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void whiteNotificationBar(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int flags = view.getSystemUiVisibility();
+            flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            view.setSystemUiVisibility(flags);
+            getWindow().setStatusBarColor(Color.WHITE);
+        }
+    }
+
+    @Override
     public void onBackPressed() {
+        // close search view on back button pressed
+        if (!searchView.isIconified()) {
+            searchView.setIconified(true);
+            return;
+        }
+
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             return;

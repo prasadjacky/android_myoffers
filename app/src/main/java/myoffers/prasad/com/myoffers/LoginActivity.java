@@ -16,10 +16,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener;
 import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+
+import org.json.JSONArray;
 
 import butterknife.ButterKnife;
 import butterknife.BindView;
@@ -96,22 +101,46 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
 
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
+        final String email = _emailText.getText().toString();
+        final String password = _passwordText.getText().toString();
 
         // TODO: Implement your own authentication logic here.
-
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         // On complete call either onLoginSuccess or onLoginFailed
+                        /*if (checkLogin(email, password)) {
+                            onLoginSuccess();
+                        } else {
+                            onLoginFailed();
+                        }*/
                         onLoginSuccess();
-                        // onLoginFailed();
                         progressDialog.dismiss();
                     }
                 }, 1000);
     }
 
+    public boolean checkLogin(String username, String password) {
+        AndroidNetworking.post("URL for Login Authentication")
+                .addBodyParameter("username", username)
+                .addBodyParameter("password", password)
+                .setTag("Login")
+                .setPriority(Priority.IMMEDIATE)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        // do anything with response
+                        Log.i(TAG, "JSON Response" + response.length());
+                    }
+
+                    @Override
+                    public void onError(ANError error) {
+                        // handle error
+                    }
+                });
+        return false;
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

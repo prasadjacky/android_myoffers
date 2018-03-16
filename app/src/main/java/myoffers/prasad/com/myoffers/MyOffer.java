@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class MyOffer implements Serializable{
     private String merchantID;
-    private String caption;
+    private String tagLine;
     private String offerDesc;
     private String category;
     private Date validFrom;
@@ -18,7 +18,7 @@ public class MyOffer implements Serializable{
 
     public MyOffer(String merchantID, String caption, String offerDesc, String category, Date validFrom, Date validTo, int thumbnail) {
         this.merchantID = merchantID;
-        this.caption = caption;
+        this.tagLine = caption;
         this.offerDesc = offerDesc;
         this.category = category;
         this.validFrom = validFrom;
@@ -35,11 +35,11 @@ public class MyOffer implements Serializable{
     }
 
     public String getCaption() {
-        return caption;
+        return tagLine;
     }
 
     public void setCaption(String caption) {
-        this.caption = caption;
+        this.tagLine = caption;
     }
 
     public String getOfferDesc() {
