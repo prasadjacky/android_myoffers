@@ -1,4 +1,4 @@
-package myoffers.prasad.com.myoffers;
+package myoffers.prasad.com.myoffers.activities;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -12,16 +12,14 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import myoffers.prasad.com.myoffers.models.MyOffer;
+import myoffers.prasad.com.myoffers.R;
 
 public class OfferDetails extends AppCompatActivity {
 
