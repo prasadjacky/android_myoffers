@@ -1,6 +1,5 @@
-package myoffers.prasad.com.myoffers;
+package myoffers.prasad.com.myoffers.activities;
 
-import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.res.Resources;
@@ -40,6 +39,9 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.BindView;
+import myoffers.prasad.com.myoffers.models.MyOffer;
+import myoffers.prasad.com.myoffers.adapters.OffersCardAdapter;
+import myoffers.prasad.com.myoffers.R;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";

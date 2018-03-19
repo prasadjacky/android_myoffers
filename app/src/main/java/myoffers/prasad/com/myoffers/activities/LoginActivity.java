@@ -1,11 +1,9 @@
-package myoffers.prasad.com.myoffers;
+package myoffers.prasad.com.myoffers.activities;
 
 import android.Manifest;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.app.ProgressDialog;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import android.content.Intent;
@@ -28,6 +26,7 @@ import org.json.JSONArray;
 
 import butterknife.ButterKnife;
 import butterknife.BindView;
+import myoffers.prasad.com.myoffers.R;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";

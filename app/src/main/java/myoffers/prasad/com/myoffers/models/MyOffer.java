@@ -1,4 +1,4 @@
-package myoffers.prasad.com.myoffers;
+package myoffers.prasad.com.myoffers.models;
 
 import java.io.Serializable;
 import java.util.Date;

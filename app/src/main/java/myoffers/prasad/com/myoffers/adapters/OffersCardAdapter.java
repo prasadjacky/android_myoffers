@@ -1,4 +1,4 @@
-package myoffers.prasad.com.myoffers;
+package myoffers.prasad.com.myoffers.adapters;
 
 /**
  * Created by prasad on 9/3/18.
@@ -7,7 +7,6 @@ package myoffers.prasad.com.myoffers;
 import android.content.Context;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,6 +24,9 @@ import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import myoffers.prasad.com.myoffers.R;
+import myoffers.prasad.com.myoffers.models.MyOffer;
 
 public class OffersCardAdapter extends RecyclerView.Adapter<OffersCardAdapter.MyViewHolder> implements Filterable {
 

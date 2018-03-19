@@ -1,4 +1,4 @@
-package myoffers.prasad.com.myoffers;
+package myoffers.prasad.com.myoffers.adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import myoffers.prasad.com.myoffers.R;
 
 /**
  * Created by prasad on 9/3/18.

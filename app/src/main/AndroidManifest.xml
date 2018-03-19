@@ -17,7 +17,7 @@
 
         <activity
             android:label="Trending Offers"
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:theme="@style/AppTheme.DarkActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,16 +26,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:theme="@style/AppTheme.Dark" />
         <activity
-            android:name=".SignupActivity"
+            android:name=".activities.SignupActivity"
             android:theme="@style/AppTheme.Dark" />
         <activity
-            android:name=".OfferDetails"
+            android:name=".activities.OfferDetails"
             android:theme="@style/AppTheme.Dark" />
         <activity
-            android:name=".NewOfferActivity"
+            android:name=".activities.NewOfferActivity"
             android:theme="@style/AppTheme.Dark" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
